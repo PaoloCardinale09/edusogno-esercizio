@@ -9,29 +9,27 @@
     include __DIR__.'/assets/partials/connection.php';
     include __DIR__.'/assets/partials/functions.php';
 
-    // controllo se l'utente è loggato
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.php");
+    // controllo se c'è nella sessione id e se l'utente è amministratore
+    if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] != true) {
+        header("Location: index.php");
         exit;
     }
-    
-    // var_dump($_SESSION['user_id'] );
+
+    // var_dump($_SESSION['is_admin']);
     // var_dump($_SESSION);
 
     // Richiamo la funzione getEvents e assegno il risultato alla variabile $events
-    $events = getUserEvents($conn,$_SESSION['user_id'], $_SESSION['user_email'], );
+    $events = getAllEvents($conn);
     ?>
     <section id="events">
         <main>
-            <h1>Ciao <span class="username"><?php echo $_SESSION['user_name'] . $_SESSION['user_surname']; ?></span>
-                ecco i tuoi eventi</h1>
+            <h1> <span class="alert">ADMIN PAGE </span> <br> Ecco tutti gli eventi </h1>
             <div class="button-wrap">
                 <a href="form_create.php" class="crea-evento-button">Crea Evento</a>
 
-                <?php if ($_SESSION['is_admin']): ?>
-                <a href="admin_page.php" class="crea-evento-button bg_success">Vai alla Dashboard Admin</a>
+                <a href="index.php" class="crea-evento-button">Torna indietro</a>
             </div>
-            <?php endif; ?>
+
 
             <div class="events">
                 <?php if ($events): ?>
@@ -41,9 +39,9 @@
                             href="event_detail.php?id=<?php echo $event['id']; ?>"><?php echo $event['nome_evento']; ?></a>
                     </h2>
                     <p class="muted-text"><?php echo $event['data_evento']; ?></p>
-                    <button><a class="join-button"
-                            href="event_detail.php?id=<?php echo $event['id']; ?>">JOIN</a></button>
 
+                    <button><a class="join-button"
+                            href="event_detail.php?id=<?php echo $event['id']; ?>">MODIFICA</a></button>
                 </div>
                 <?php endforeach; ?>
 
